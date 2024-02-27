@@ -1,0 +1,130 @@
+version: '3.7'
+
+services:
+  db:
+    build: './mysql'
+    restart: always
+    container_name: db
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: YLUPeVNtpdPGEII0
+      MYSQL_ROOT_PASSWORD: YLUPeVNtpdPGEII0
+        #command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - '23:22'
+    networks:
+      - app-network
+
+  wordpress:
+    depends_on:
+      - db
+    build: './wordpress'
+    container_name: wordpress
+    restart: unless-stopped
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=wp_user
+      - WORDPRESS_DB_PASSWORD=YLUPeVNtpdPGEII0
+      - WORDPRESS_DB_NAME=wordpress
+    volumes:
+      - ./wordpress/wordpress:/var/www/wordpress/
+      - wordpress:/var/www/html   ##volume used for certs
+    networks:
+      - app-network
+
+  ##Drupal
+  drupal:
+    environment:
+      - DRUPAL_DB_HOST=db
+      - DRUPAL_DB_PASSWORD=YLUPeVNtpdPGEII0
+    build: './drupal'
+    container_name: drupal
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - app-network
+    volumes:
+      - ./drupal/drupal:/var/www/drupal
+      - drupal:/var/www/html
+
+#########Joomla
+  joomla:
+    environment:
+      - JOOMLA_DB_HOST=db
+      - JOOMLA_DB_PASSWORD=YLUPeVNtpdPGEII0
+    build: './joomla'
+    container_name: joomla
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - app-network
+    volumes:
+      - ./joomla/joomla:/var/www/joomla/
+      - joomla:/var/www/html
+
+  phpmyadmin:
+    build: './phpmyadmin'
+    restart: always
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - '24:22'
+    volumes:
+      - ./phpmyadmin/phpmyadmin:/var/www/html
+    networks:
+      - app-network
+
+  webserver:
+    depends_on:
+      - wordpress
+      - drupal
+      - joomla
+    build: './webserver'
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "26:22"
+    volumes:
+      - ./wordpress/wordpress:/var/www/wordpress/
+      - ./webserver/nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - ./drupal/drupal:/var/www/drupal
+      - ./phpmyadmin/phpmyadmin:/var/www/phpmyadmin
+      - ./joomla/joomla:/var/www/joomla
+    networks:
+      - app-network
+
+  ## Certificate
+  certbot:
+    depends_on:
+      - webserver
+    build: './certbot'
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - ./wordpress/wordpress:/var/www/wordpress
+      - ./drupal/drupal:/var/www/drupal
+      - ./joomla/joomla:/var/www/joomla
+      - ./phpmyadmin/phpmyadmin:/var/www/phpmyadmin
+    command: certonly --webroot --webroot-path=/var/www/drupal --email sammy@berta.bg --agree-tos --no-eff-email --force-renewal -d drupal.berta.bg 
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  wordpress:
+  certbot-etc:
+  drupal:
+  joomla:
+
