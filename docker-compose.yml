@@ -5,12 +5,9 @@ services:
     build: './mysql'
     restart: always
     container_name: db
+    env_file: ./mysql/.env
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wp_user
       MYSQL_PASSWORD: YLUPeVNtpdPGEII0
-      MYSQL_ROOT_PASSWORD: YLUPeVNtpdPGEII0
-        #command: '--default-authentication-plugin=mysql_native_password'
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -39,7 +36,7 @@ services:
   drupal:
     environment:
       - DRUPAL_DB_HOST=db
-      - DRUPAL_DB_PASSWORD=YLUPeVNtpdPGEII0
+      - DRUPAL_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
     build: './drupal'
     container_name: drupal
     depends_on:
@@ -55,7 +52,7 @@ services:
   joomla:
     environment:
       - JOOMLA_DB_HOST=db
-      - JOOMLA_DB_PASSWORD=YLUPeVNtpdPGEII0
+      - JOOMLA_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
     build: './joomla'
     container_name: joomla
     depends_on:
@@ -115,7 +112,7 @@ services:
       - ./drupal/drupal:/var/www/drupal
       - ./joomla/joomla:/var/www/joomla
       - ./phpmyadmin/phpmyadmin:/var/www/phpmyadmin
-    command: certonly --webroot --webroot-path=/var/www/drupal --email sammy@berta.bg --agree-tos --no-eff-email --force-renewal -d drupal.berta.bg 
+    command: certonly --webroot --webroot-path=/var/www/phpmyadmin --email sammy@berta.bg --agree-tos --no-eff-email --force-renewal -d phpmyadmin.berta.bg
 
 networks:
   app-network:
