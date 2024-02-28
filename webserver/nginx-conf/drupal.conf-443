@@ -1,6 +1,8 @@
 server {
         listen 80;
         listen [::]:80;
+	modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
         server_name drupal.com;
 
@@ -18,6 +20,8 @@ server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
         server_name drupal.com;
+        modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
         index index.php index.html index.htm;
 

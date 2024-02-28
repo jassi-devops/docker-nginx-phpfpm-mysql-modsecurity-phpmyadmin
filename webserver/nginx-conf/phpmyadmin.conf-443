@@ -1,6 +1,8 @@
 server {
         listen 80;
         listen [::]:80;
+        modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
         server_name phpmyadmin.com;
         location ~ /.well-known/acme-challenge {
@@ -18,6 +20,8 @@ server {
         listen [::]:443 ssl http2;
         server_name phpmyadmin.com;
         index index.php index.html index.htm;
+        modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
 
         server_tokens off;

@@ -3,6 +3,8 @@ server {
         listen [::]:80;
 
         server_name joomla.com;
+        modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
         location ~ /.well-known/acme-challenge {
                 allow all;
@@ -18,6 +20,8 @@ server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
         server_name joomla.com;
+        modsecurity on;
+        modsecurity_rules_file /etc/nginx/modsec/default-rules.conf;
 
         index index.php index.html index.htm;
 
