@@ -114,6 +114,8 @@ services:
       - ./drupal/drupal:/var/www/drupal
       - ./joomla/joomla:/var/www/joomla
       - ./phpmyadmin/phpmyadmin:/var/www/phpmyadmin
+    networks:
+      - app-network
     command: certonly --webroot --webroot-path=/var/www/phpmyadmin --email sammy@berta.bg --agree-tos --no-eff-email --force-renewal -d phpmyadmin.berta.bg
 
 networks:
