@@ -5,9 +5,11 @@ services:
     build: './mysql'
     restart: always
     container_name: db
-    env_file: ./mysql/.env
     environment:
-      MYSQL_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: YLUPeVNtpdPGEII0
+      MYSQL_ROOT_PASSWORD: YLUPeVNtpdPGEII0
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -19,7 +21,6 @@ services:
     depends_on:
       - db
     build: './wordpress'
-    env_file: ./mysql/.env
     container_name: wordpress
     restart: unless-stopped
     environment:
@@ -35,10 +36,9 @@ services:
 
   ##Drupal
   drupal:
-    env_file: ./mysql/.env
     environment:
       - DRUPAL_DB_HOST=db
-      - DRUPAL_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - DRUPAL_DB_PASSWORD=YLUPeVNtpdPGEII0
     build: './drupal'
     container_name: drupal
     depends_on:
@@ -52,10 +52,9 @@ services:
 
 #########Joomla
   joomla:
-    env_file: ./mysql/.env
     environment:
       - JOOMLA_DB_HOST=db
-      - JOOMLA_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - JOOMLA_DB_PASSWORD=YLUPeVNtpdPGEII0
     build: './joomla'
     container_name: joomla
     depends_on:
@@ -73,7 +72,7 @@ services:
     container_name: phpmyadmin
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: YLUPeVNtpdPGEII0
     ports:
       - '24:22'
     volumes:
