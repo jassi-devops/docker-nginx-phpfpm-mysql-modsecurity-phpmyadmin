@@ -7,7 +7,7 @@ services:
     container_name: db
     env_file: ./mysql/.env
     environment:
-      MYSQL_PASSWORD: YLUPeVNtpdPGEII0
+      MYSQL_PASSWORD: $MYSQL_ROOT_PASSWORD
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -19,6 +19,7 @@ services:
     depends_on:
       - db
     build: './wordpress'
+    env_file: ./mysql/.env
     container_name: wordpress
     restart: unless-stopped
     environment:
@@ -34,6 +35,7 @@ services:
 
   ##Drupal
   drupal:
+    env_file: ./mysql/.env
     environment:
       - DRUPAL_DB_HOST=db
       - DRUPAL_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
@@ -50,6 +52,7 @@ services:
 
 #########Joomla
   joomla:
+    env_file: ./mysql/.env
     environment:
       - JOOMLA_DB_HOST=db
       - JOOMLA_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
