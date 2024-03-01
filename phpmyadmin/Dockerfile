@@ -14,11 +14,8 @@ RUN mkdir /var/run/sshd \
 
 RUN  a2enmod ssl
 ADD conf /etc/apache2/sites-available
-RUN ls -la /etc/apache2/sites-available
-RUN cat /etc/apache2/sites-available/000-default.conf
 COPY config.secret.inc.php /etc/phpmyadmin
 COPY cert /etc/apache2/ssl/
-RUN ls -l /etc/apache2/ssl/
 # Copy supervisord configuration file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
