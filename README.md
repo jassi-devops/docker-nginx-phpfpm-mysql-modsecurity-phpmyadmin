@@ -237,28 +237,35 @@ In your web browser, navigate to your server’s domain. Remember to substitute 
 https://your_domain
 ```
 
-Important Things to Know
-All applications and MySQL data are persistent
-
-Wordpress Files directory: docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/wordpress/wordpress
-Joomla Files directory: docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/joomla/joomla
-Drupal Files directory: docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/drupal/drupal
-Drupal Files directory: docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/drupal/drupal
-Phpmyadmin Files directory: docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/phpmyadmin/phpmyadmin
-Mysql Data directory: /var/lib/docker/volumes/app_db_data/_data
-
-How to change SSH root user password
-To change the SSH root user password for a specific application, you have to open the Docker file from the application-specific folder and change the password
+## How to change SSH root user password
+To change the SSH root user password for a specific application, you have to open the Docker file from the application-specific folder and change the password.
 For example, if we have to change the ssh root password for a webserver application then follow the below steps:
+```
 cd docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/webserver
+```
 edit the Dockerfile and change the password from Mysql@123 to your_password
 FROM
+```
 RUN echo -n 'root:Mysql@123' | chpasswd
+```
 To
+```
 RUN echo -n 'root:your_password’| chpasswd
-
+```
 To make changes affective, you have to recreate the webservice service
+```
 docker-compose up -d --force-recreate --no-deps webserver
+```
+>Same is for Mysql and phpmyadmin
 
-Same is for Mysql and phpmyadmin
+
+## Important Things to Know
+All applications and MySQL data are persistent
+
+Wordpress Files directory: ```docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/wordpress/wordpress```
+Joomla Files directory: ```docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/joomla/joomla```
+Drupal Files directory: ```docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/drupal/drupal```
+Drupal Files directory: ```docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/drupal/drupal```
+Phpmyadmin Files directory: ```docker-nginx-phpfpm-mysql-modsecurity-phpmyadmin/phpmyadmin/phpmyadmin```
+Mysql Data directory: ```/var/lib/docker/volumes/app_db_data/_data```
 
